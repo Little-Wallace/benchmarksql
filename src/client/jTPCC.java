@@ -13,6 +13,7 @@ import java.io.*;
 import java.nio.file.*;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.regex.Pattern;
 import java.text.*;
 
@@ -47,6 +48,7 @@ public class jTPCC implements jTPCCConfig
     private jTPCCRandom rnd;
     private OSCollector osCollector = null;
     private HashMap<String, Long> costPerWorkerload;
+    private AtomicLong commitTime;
 
     public static void main(String args[])
     {
@@ -58,6 +60,7 @@ public class jTPCC implements jTPCCConfig
     {
 	String prop =  p.getProperty(pName);
 	costPerWorkerload = new HashMap<String, Long>();
+	commitTime = new AtomicLong(0);
 	log.info("Term-00, " + pName + "=" + prop);
 	return(prop);
     }
@@ -636,6 +639,9 @@ public class jTPCC implements jTPCCConfig
 	    }
 	}
     }
+    public void calculateCommitTime(long t) {
+        commitTime.getAndAdd(t);
+	}
 
     public void signalTerminalEndedTransaction(String terminalName, String transactionType, long executionTime, String comment, int newOrder)
     {
@@ -647,7 +653,7 @@ public class jTPCC implements jTPCCConfig
 	    if (counter == null) {
 	        costPerWorkerload.put(transactionType, Long.valueOf(executionTime));
 		} else {
-	    	counter += executionTime;
+			costPerWorkerload.put(transactionType, counter + executionTime);
 		}
 	}
 
@@ -697,6 +703,7 @@ public class jTPCC implements jTPCCConfig
 	log.info("Term-00, Session Start     = " + sessionStart );
 	log.info("Term-00, Session End       = " + sessionEnd);
 	log.info("Term-00, Transaction Count = " + (transactionCount-1));
+	log.info("Commit NewOrder cost time: " + String.valueOf(commitTime.get()));
 	for (String key : costPerWorkerload.keySet()) {
 		Long value = costPerWorkerload.get(key);
 		log.info("executeTime[" + key + "]=" + value.toString());

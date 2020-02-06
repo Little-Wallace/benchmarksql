@@ -39,7 +39,9 @@ public class jTPCCTData
     private long                transDue;
     private long                transStart;
     private long                transEnd;
-    private boolean             transRbk;
+    private long				commitStart;
+	private long				commitEnd;
+	private boolean             transRbk;
     private String              transError;
 
     private int                 terminalWarehouse = 0;
@@ -651,8 +653,10 @@ public class jTPCCTData
 	    newOrder.execution_status = new String("Order placed");
 	    newOrder.total_amount = total_amount;
 
+		commitStart = System.currentTimeMillis();
 	    db.commit();
 
+		commitEnd = System.currentTimeMillis();
 	}
 	catch (SQLException se)
 	{
@@ -1863,6 +1867,10 @@ log.trace("w_zip=" + payment.w_zip + " d_zip=" + payment.d_zip);
 
 	return numSkipped;
     }
+
+    public long getCommitTime() {
+    	return commitEnd - commitStart;
+	}
 
     private class DeliveryBGData
     {

@@ -127,6 +127,7 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	for(int i = 0; (i < numTransactions || numTransactions == -1) && !stopRunning; i++)
 	{
 
+		long commitTime = 0;
 	    long transactionType = rnd.nextLong(1, 100);
 	    int skippedDeliveries = 0, newOrder = 0;
 	    String transactionTypeName;
@@ -277,6 +278,7 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 		    term.execute(log, db);
 		    parent.resultAppend(term);
 		    term.traceScreen(log);
+		    commitTime = term.getCommitTime();
 		}
 		catch (CommitException e)
 		{
@@ -291,6 +293,7 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 		transactionTypeName = "New-Order";
 		newOrderCounter++;
 		newOrder = 1;
+		parent.calculateCommitTime(commitTime);
 	    }
 
 	    long transactionEnd = System.currentTimeMillis();
