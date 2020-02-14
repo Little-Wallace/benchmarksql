@@ -528,7 +528,7 @@ public class LoadDataWorker implements Runnable
 			if (c_id != 1 && (c_id - 1) % 200 == 0)
 			{
 				if (writeCSV){
-					// LoadData.customerAppend(sbCustomer);
+					LoadData.customerAppend(sbCustomer);
 					LoadData.historyAppend(sbHistory);
 				}
 				else
@@ -545,7 +545,6 @@ public class LoadDataWorker implements Runnable
 
 		if (writeCSV)
 		{
-        /*
 		    fmtCustomer.format("%d,%d,%d,%.4f,%s,%s,%s," +
 			"%.2f,%.2f,%.2f,%d,%d," +
 			"%s,%s,%s,%s,%s,%s,%s,%s,%s\n",
@@ -570,7 +569,6 @@ public class LoadDataWorker implements Runnable
 			new java.sql.Timestamp(System.currentTimeMillis()).toString(),
 			"OE",
 			rnd.getAString(300, 500));
-            */
 		}
 		else
 		{
@@ -639,7 +637,7 @@ public class LoadDataWorker implements Runnable
 
 	    if (writeCSV)
 	    {
-		// LoadData.customerAppend(sbCustomer);
+		LoadData.customerAppend(sbCustomer);
 		LoadData.historyAppend(sbHistory);
 	    }
 	    else
@@ -680,7 +678,7 @@ public class LoadDataWorker implements Runnable
 				if (writeCSV)
 				{
 					LoadData.orderAppend(sbOrder);
-					// LoadData.orderLineAppend(sbOrderLine);
+					LoadData.orderLineAppend(sbOrderLine);
 					LoadData.newOrderAppend(sbNewOrder);
 				}
 				else
@@ -737,7 +735,6 @@ public class LoadDataWorker implements Runnable
 
 		    if (writeCSV)
 		    {
-            /*
 			fmtOrderLine.format("%d,%d,%d,%d,%d,%s,%.2f,%d,%d,%s\n",
 			    w_id,
 			    d_id,
@@ -749,7 +746,6 @@ public class LoadDataWorker implements Runnable
 			    w_id,
 			    5,
 			    rnd.getAString(24, 24));
-                */
 		    }
 		    else
 		    {
@@ -801,7 +797,7 @@ public class LoadDataWorker implements Runnable
 	    if (writeCSV)
 	    {
 		LoadData.orderAppend(sbOrder);
-		// LoadData.orderLineAppend(sbOrderLine);
+		LoadData.orderLineAppend(sbOrderLine);
 		LoadData.newOrderAppend(sbNewOrder);
 	    }
 	    else
