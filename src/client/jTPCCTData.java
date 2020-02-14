@@ -1731,20 +1731,11 @@ log.trace("w_zip=" + payment.w_zip + " d_zip=" + payment.d_zip);
 			 */
 			}
 		}
-		stmt1 = db.stmtDeliveryBGBatchUpdateOrder;
-		stmt1.setInt(1, deliveryBG.o_carrier_id);
-		stmt1.setInt(2, deliveryBG.w_id);
-		for (d_id = 1; d_id <= 10; d_id ++) {
-			stmt1.setInt(1 + d_id * 2, d_id);
-			stmt1.setInt(2 + d_id * 2, deliveryBG.delivered_o_id[d_id - 1]);
-		}
-		stmt1.executeUpdate();
-
 		stmt1 = db.stmtDeliveryBGBatchSelectOrder;
-		stmt1.setInt(1, deliveryBG.w_id);
 		for (d_id = 1; d_id <= 10; d_id ++) {
-			stmt1.setInt(d_id * 2, d_id);
-			stmt1.setInt(1 + d_id * 2, deliveryBG.delivered_o_id[d_id - 1]);
+			stmt1.setInt(d_id * 3 - 2, deliveryBG.w_id);
+			stmt1.setInt(d_id * 3 - 1, d_id);
+			stmt1.setInt(d_id * 3, deliveryBG.delivered_o_id[d_id - 1]);
 		}
 		rs = stmt1.executeQuery();
 		while (rs.next()) {
@@ -1753,13 +1744,23 @@ log.trace("w_zip=" + payment.w_zip + " d_zip=" + payment.d_zip);
 			deliveryBG.delivered_c_id[d_id - 1] = c_id;
 		}
 		rs.close();
+		stmt1 = db.stmtDeliveryBGBatchUpdateOrder;
+		stmt1.setInt(1, deliveryBG.o_carrier_id);
+		for (d_id = 1; d_id <= 10; d_id ++) {
+			stmt1.setInt(d_id * 3 - 1, deliveryBG.w_id);
+			stmt1.setInt(d_id * 3, d_id);
+			stmt1.setInt(d_id * 3 + 1, deliveryBG.delivered_o_id[d_id - 1]);
+		}
+		stmt1.executeUpdate();
+
+
 
 		stmt1 = db.stmtDeliveryBGBatchUpdateOrderLine;
 		stmt1.setTimestamp(1, new java.sql.Timestamp(now));
-		stmt1.setInt(2, deliveryBG.w_id);
 		for (d_id = 1; d_id <= 10; d_id ++) {
-			stmt1.setInt(1 + d_id * 2, d_id);
-			stmt1.setInt(2 + d_id * 2, deliveryBG.delivered_o_id[d_id - 1]);
+			stmt1.setInt(d_id * 3 - 1, deliveryBG.w_id);
+			stmt1.setInt(d_id * 3, d_id);
+			stmt1.setInt(d_id * 3 + 1, deliveryBG.delivered_o_id[d_id - 1]);
 		}
 		stmt1.executeUpdate();
 
@@ -1838,10 +1839,10 @@ log.trace("w_zip=" + payment.w_zip + " d_zip=" + payment.d_zip);
 	    }
 
         stmt2 = db.stmtDeliveryBGBatchDeleteNewOrder;
-		stmt2.setInt(1, deliveryBG.w_id);
 		for (d_id = 1; d_id <= 10; d_id ++) {
-			stmt2.setInt(d_id * 2, d_id);
-			stmt2.setInt(1 + d_id * 2, deliveryBG.delivered_o_id[d_id - 1]);
+			stmt2.setInt(d_id * 3 - 2, deliveryBG.w_id);
+			stmt2.setInt(d_id * 3 - 1, d_id);
+			stmt2.setInt(d_id * 3, deliveryBG.delivered_o_id[d_id - 1]);
 		}
 
 		stmt2.executeUpdate();

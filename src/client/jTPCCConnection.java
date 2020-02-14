@@ -271,9 +271,9 @@ public class jTPCCConnection
 
 	stmtDeliveryBGBatchDeleteNewOrder = dbConn.prepareStatement(
 		"DELETE FROM bmsql_new_order " +
-		"    WHERE no_w_id = ? AND (no_d_id, no_o_id) in (" +
-		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
-		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+		"    WHERE (no_w_id,no_d_id, no_o_id) in (" +
+				"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?)," +
+				"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?))");
 
 	stmtDeliveryBGSelectOrder = dbConn.prepareStatement(
 		"SELECT o_c_id " +
@@ -282,9 +282,9 @@ public class jTPCCConnection
 	stmtDeliveryBGBatchSelectOrder = dbConn.prepareStatement(
 		"SELECT o_c_id, o_d_id" +
 		"    FROM bmsql_oorder " +
-		"    WHERE o_w_id = ? AND (o_d_id,o_id) in (" +
-		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
-		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+		"    WHERE (o_w_id,o_d_id,o_id) in (" +
+		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?)," +
+		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?))");
 
 	stmtDeliveryBGUpdateOrder = dbConn.prepareStatement(
 		"UPDATE bmsql_oorder " +
@@ -294,9 +294,9 @@ public class jTPCCConnection
 	stmtDeliveryBGBatchUpdateOrder = dbConn.prepareStatement(
 		"UPDATE bmsql_oorder " +
 		"    SET o_carrier_id = ? " +
-		"    WHERE no_w_id = ? AND (no_d_id, no_o_id) in (" +
-		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
-		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+		"    WHERE (o_w_id, o_d_id, o_o_id) in (" +
+		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?)," +
+		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?))");
 
 	stmtDeliveryBGSelectSumOLAmount = dbConn.prepareStatement(
 		"SELECT sum(ol_amount) AS sum_ol_amount " +
@@ -310,9 +310,10 @@ public class jTPCCConnection
 	stmtDeliveryBGBatchUpdateOrderLine = dbConn.prepareStatement(
 		"UPDATE bmsql_order_line " +
 		"    SET ol_delivery_d = ? " +
-		"    WHERE ol_w_id = ? AND (ol_d_id,ol_o_id) in (" +
-		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
-		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+		"    WHERE (ol_w_id,ol_d_id,ol_o_id) in (" +
+		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?)," +
+		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?))");
+
 
 	stmtDeliveryBGUpdateCustomer = dbConn.prepareStatement(
 		"UPDATE bmsql_customer " +
