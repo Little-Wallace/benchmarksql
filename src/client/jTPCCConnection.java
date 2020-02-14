@@ -50,11 +50,15 @@ public class jTPCCConnection
     public PreparedStatement    stmtStockLevelSelectLow;
 
     public PreparedStatement    stmtDeliveryBGSelectOldestNewOrder;
+    public PreparedStatement    stmtDeliveryBGBatchDeleteNewOrder;
     public PreparedStatement    stmtDeliveryBGDeleteOldestNewOrder;
     public PreparedStatement    stmtDeliveryBGSelectOrder;
+    public PreparedStatement    stmtDeliveryBGBatchSelectOrder;
     public PreparedStatement    stmtDeliveryBGUpdateOrder;
+    public PreparedStatement    stmtDeliveryBGBatchUpdateOrder;
     public PreparedStatement    stmtDeliveryBGSelectSumOLAmount;
     public PreparedStatement    stmtDeliveryBGUpdateOrderLine;
+    public PreparedStatement    stmtDeliveryBGBatchUpdateOrderLine;
     public PreparedStatement    stmtDeliveryBGUpdateCustomer;
 
     public jTPCCConnection(Connection dbConn, int dbType)
@@ -264,14 +268,36 @@ public class jTPCCConnection
 	stmtDeliveryBGDeleteOldestNewOrder = dbConn.prepareStatement(
 		"DELETE FROM bmsql_new_order " +
 		"    WHERE no_w_id = ? AND no_d_id = ? AND no_o_id = ?");
+
+	stmtDeliveryBGBatchDeleteNewOrder = dbConn.prepareStatement(
+		"DELETE FROM bmsql_new_order " +
+		"    WHERE no_w_id = ? AND (no_d_id, no_o_id) in (" +
+		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
+		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+
 	stmtDeliveryBGSelectOrder = dbConn.prepareStatement(
 		"SELECT o_c_id " +
 		"    FROM bmsql_oorder " +
 		"    WHERE o_w_id = ? AND o_d_id = ? AND o_id = ?");
+	stmtDeliveryBGBatchSelectOrder = dbConn.prepareStatement(
+		"SELECT o_c_id, o_d_id" +
+		"    FROM bmsql_oorder " +
+		"    WHERE o_w_id = ? AND (o_d_id,o_id) in (" +
+		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
+		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+
 	stmtDeliveryBGUpdateOrder = dbConn.prepareStatement(
 		"UPDATE bmsql_oorder " +
 		"    SET o_carrier_id = ? " +
 		"    WHERE o_w_id = ? AND o_d_id = ? AND o_id = ?");
+
+	stmtDeliveryBGBatchUpdateOrder = dbConn.prepareStatement(
+		"UPDATE bmsql_oorder " +
+		"    SET o_carrier_id = ? " +
+		"    WHERE no_w_id = ? AND (no_d_id, no_o_id) in (" +
+		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
+		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+
 	stmtDeliveryBGSelectSumOLAmount = dbConn.prepareStatement(
 		"SELECT sum(ol_amount) AS sum_ol_amount " +
 		"    FROM bmsql_order_line " +
@@ -280,6 +306,14 @@ public class jTPCCConnection
 		"UPDATE bmsql_order_line " +
 		"    SET ol_delivery_d = ? " +
 		"    WHERE ol_w_id = ? AND ol_d_id = ? AND ol_o_id = ?");
+
+	stmtDeliveryBGBatchUpdateOrderLine = dbConn.prepareStatement(
+		"UPDATE bmsql_order_line " +
+		"    SET ol_delivery_d = ? " +
+		"    WHERE ol_w_id = ? AND (ol_d_id,ol_o_id) in (" +
+		"(?,?),(?,?),(?,?),(?,?),(?,?)," +
+		"(?,?),(?,?),(?,?),(?,?),(?,?))");
+
 	stmtDeliveryBGUpdateCustomer = dbConn.prepareStatement(
 		"UPDATE bmsql_customer " +
 		"    SET c_balance = c_balance + ?, " +
