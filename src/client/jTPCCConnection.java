@@ -294,7 +294,7 @@ public class jTPCCConnection
 	stmtDeliveryBGBatchUpdateOrder = dbConn.prepareStatement(
 		"UPDATE bmsql_oorder " +
 		"    SET o_carrier_id = ? " +
-		"    WHERE (o_w_id, o_d_id, o_o_id) in (" +
+		"    WHERE (o_w_id, o_d_id, o_id) in (" +
 		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?)," +
 		"(?,?,?),(?,?,?),(?,?,?),(?,?,?),(?,?,?))");
 
