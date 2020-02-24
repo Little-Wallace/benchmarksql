@@ -517,6 +517,15 @@ public class jTPCCTData
 			int seq = ol_seq[i];
 			if (!newOrder.found[seq])
 			{
+				for (int j = 0; j < ol_cnt; j ++) {
+					int seq_j = ol_seq[j];
+					NewOrderItem item = itemMap.get(newOrder.ol_i_id[seq_j]);
+					if (item != null) {
+						System.out.println("stock["+j+"].item"+newOrder.ol_i_id[seq_j]+",warehouse="+newOrder.ol_supply_w_id[seq_j] + ",found: "+newOrder.found[seq_j]);
+					} else {
+						System.out.println("stock["+j+"] has no item");
+					}
+				}
 				throw new Exception("STOCK with" +
 						" S_W_ID=" + newOrder.ol_supply_w_id[seq] +
 						" S_I_ID=" + newOrder.ol_i_id[seq] +
