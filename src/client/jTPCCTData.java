@@ -56,6 +56,8 @@ public class jTPCCTData
 
     private StringBuffer        resultSB = new StringBuffer();
     private Formatter           resultFmt = new Formatter(resultSB);
+    public long 				afterUpdateTime;
+    public long					beforeCommitTime;
 
     public void setNumWarehouses(int num)
     {
@@ -791,6 +793,7 @@ public class jTPCCTData
 	    stmt.setDouble(1, payment.h_amount);
 	    stmt.setInt(2, payment.w_id);
 	    stmt.executeUpdate();
+	    this.afterUpdateTime = System.currentTimeMillis();
 
 	    // Select the WAREHOUSE.
 	    stmt = db.stmtPaymentSelectWarehouse;
@@ -931,6 +934,7 @@ public class jTPCCTData
 
 	    payment.h_date = new java.sql.Timestamp(h_date).toString();
 
+	    this.beforeCommitTime = System.currentTimeMillis();
 	    db.commit();
 	}
 	catch (SQLException se)

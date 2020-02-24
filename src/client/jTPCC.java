@@ -32,6 +32,7 @@ public class jTPCC implements jTPCCConfig
     private String[] terminalNames;
     private boolean terminalsBlockingExit = false;
     private long terminalsStarted = 0, sessionCount = 0, transactionCount = 0;
+    private long commitTime = 0, updateTime = 0;
     private Object counterLock = new Object();
 
     private long newOrderCounter = 0, sessionStartTimestamp, sessionEndTimestamp, sessionNextTimestamp=0, sessionNextKounter=0;
@@ -637,7 +638,15 @@ public class jTPCC implements jTPCCConfig
 	}
     }
 
-    public void signalTerminalEndedTransaction(String terminalName, String transactionType, long executionTime, String comment, int newOrder)
+	public void signalPayment(long updateTime, long commitTime)
+	{
+		synchronized (this.counterLock) {
+			this.commitTime += commitTime;
+			this.updateTime += commitTime;
+		}
+	}
+
+	public void signalTerminalEndedTransaction(String terminalName, String transactionType, long executionTime, String comment, int newOrder)
     {
 	synchronized (counterLock)
 	{
@@ -697,6 +706,8 @@ public class jTPCC implements jTPCCConfig
 	log.info("Term-00, Session Start     = " + sessionStart );
 	log.info("Term-00, Session End       = " + sessionEnd);
 	log.info("Term-00, Transaction Count = " + (transactionCount-1));
+	log.info("Term-00, Payment Commit Time = " + commitTime);
+	log.info("Term-00, Payment Update Time = " + updateTime);
 		for (String key : costPerWorkerload.keySet()) {
 			Long value = costPerWorkerload.get(key);
 			log.info("executeTime[" + key + "]=" + value.toString());

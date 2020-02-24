@@ -147,9 +147,9 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	    if(!terminalWarehouseFixed)
 		terminalWarehouseID = rnd.nextInt(1, numWarehouses);
 
+		jTPCCTData      term = new jTPCCTData();
 	    if(transactionType <= paymentWeight)
 	    {
-		jTPCCTData      term = new jTPCCTData();
 		term.setNumWarehouses(numWarehouses);
 		term.setWarehouse(terminalWarehouseID);
 		term.setDistrict(terminalDistrictID);
@@ -175,7 +175,6 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	    }
 	    else if(transactionType <= paymentWeight + stockLevelWeight)
 	    {
-		jTPCCTData      term = new jTPCCTData();
 		term.setNumWarehouses(numWarehouses);
 		term.setWarehouse(terminalWarehouseID);
 		term.setDistrict(terminalDistrictID);
@@ -201,7 +200,6 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	    }
 	    else if(transactionType <= paymentWeight + stockLevelWeight + orderStatusWeight)
 	    {
-		jTPCCTData      term = new jTPCCTData();
 		term.setNumWarehouses(numWarehouses);
 		term.setWarehouse(terminalWarehouseID);
 		term.setDistrict(terminalDistrictID);
@@ -227,7 +225,6 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	    }
 	    else if(transactionType <= paymentWeight + stockLevelWeight + orderStatusWeight + deliveryWeight)
 	    {
-		jTPCCTData      term = new jTPCCTData();
 		term.setNumWarehouses(numWarehouses);
 		term.setWarehouse(terminalWarehouseID);
 		term.setDistrict(terminalDistrictID);
@@ -266,7 +263,6 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	    }
 	    else
 	    {
-		jTPCCTData      term = new jTPCCTData();
 		term.setNumWarehouses(numWarehouses);
 		term.setWarehouse(terminalWarehouseID);
 		term.setDistrict(terminalDistrictID);
@@ -303,6 +299,9 @@ public class jTPCCTerminal implements jTPCCConfig, Runnable
 	    {
 		parent.signalTerminalEndedTransaction(this.terminalName, transactionTypeName, transactionEnd - transactionStart, (skippedDeliveries == 0 ? "None" : "" + skippedDeliveries + " delivery(ies) skipped."), newOrder);
 	    }
+	    if (transactionTypeName.equals("Payment")) {
+	        parent.signalPayment(term.afterUpdateTime - transactionStart, transactionEnd - term.beforeCommitTime);
+		}
 
 	    if(limPerMin_Terminal>0){
 		long elapse = transactionEnd-transactionStart;
