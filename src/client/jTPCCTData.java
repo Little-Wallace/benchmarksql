@@ -485,10 +485,16 @@ public class jTPCCTData
 			stmt.setInt(i * 2 + 2, newOrder.ol_i_id[seq]);
 		}
 		rs = stmt.executeQuery();
+		int actual_w_ids[] = new int[16];
+		int actual_i_ids[] = new int[16];
+		int actual_len = 0;
 		while (rs.next()) {
 			int i_id = rs.getInt("s_i_id");
 			int w_id = rs.getInt("s_w_id");
 			NewOrderItem item = itemMap.get(i_id);
+			actual_i_ids[actual_len] = i_id;
+			actual_w_ids[actual_len] = w_id;
+			actual_len ++;
 
 			// There may be two item having the same supply warehouse.
 			for (int i = 0; i < ol_cnt; i ++) {
@@ -525,6 +531,9 @@ public class jTPCCTData
 					} else {
 						System.out.println("stock["+j+"] has no item");
 					}
+				}
+				for (int j = 0; j < actual_len; j ++) {
+					System.out.println("actual["+j+"].w_id="+actual_w_ids[j]+",i_id="+actual_i_ids[j]);
 				}
 				throw new Exception("STOCK with" +
 						" S_W_ID=" + newOrder.ol_supply_w_id[seq] +
