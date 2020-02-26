@@ -1679,16 +1679,30 @@ log.trace("w_zip=" + payment.w_zip + " d_zip=" + payment.d_zip);
 			stmt1.setInt(d_id * 3, deliveryBG.delivered_o_id[d_id - 1]);
 		}
 		rs = stmt1.executeQuery();
+		int actual_d_ids[] = new int[11];
+		int actual_c_ids[] = new int[11];
+		int actual_len = 0;
+
 		while (rs.next())
 		{
 			d_id = rs.getInt("o_d_id");
 			c_id = rs.getInt("o_c_id");
 			deliveryBG.delivered_c_id[d_id - 1]	= c_id;
+			actual_d_ids[actual_len] = d_id;
+			actual_c_ids[actual_len] = c_id;
+			actual_len ++;
 		}
 		rs.close();
 		for (d_id = 1; d_id <= 10; d_id++) {
 			o_id = deliveryBG.delivered_o_id[d_id - 1];
 			if (o_id >= 0 && deliveryBG.delivered_c_id[d_id - 1] < 0) {
+				for (int j = 1; j <= 10; j ++) {
+					System.out.println("c_id["+j+"]="+deliveryBG.delivered_c_id[j-1] +",o_id="+ deliveryBG.delivered_o_id[j-1]);
+				}
+				for (int j = 0; j < actual_len; j ++) {
+					System.out.println("actual_c_ids[" +actual_d_ids[j] + "]=" + actual_c_ids[j]);
+				}
+
 				throw new Exception("ORDER in DELIVERY_BG for" +
 						" O_W_ID=" + deliveryBG.w_id +
 						" O_D_ID=" + d_id +
